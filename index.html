@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The visualization of paper Temporal-Consistency-Aware-Text-to-Motion-Generation </title>
+    <title>我的视频收藏馆 - 分类展示</title>
     <style>
         /* 基础样式 */
         * {
@@ -14,7 +14,7 @@
         
         body {
             font-family: 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -25,7 +25,7 @@
             padding: 30px;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
         
         .header h1 {
@@ -39,35 +39,96 @@
             font-size: 1.1em;
         }
         
-        /* 视频容器 */
-        .video-container {
+        /* 分类导航 */
+        .category-nav {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            gap: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
         }
         
-        /* 每个视频卡片 */
+        .category-btn {
+            padding: 10px 25px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            color: #555;
+        }
+        
+        .category-btn:hover {
+            background: #f8f9fa;
+            border-color: #3498db;
+        }
+        
+        .category-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        /* 分类容器 */
+        .category-section {
+            margin-bottom: 50px;
+            display: block; /* 默认显示所有分类 */
+        }
+        
+        /* 分类标题 */
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid;
+        }
+        
+        .category-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .category-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+        
+        .category-count {
+            background: #e74c3c;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+        
+        /* 视频容器 */
+        .video-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        /* 视频卡片 */
         .video-card {
             background: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            width: 350px;
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
         .video-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
         
         /* 视频播放器 */
         .video-player {
             width: 100%;
-            height: 200px;
+            height: 180px;
             background: #000;
         }
         
@@ -75,6 +136,7 @@
             width: 100%;
             height: 100%;
             display: block;
+            object-fit: cover;
         }
         
         /* 视频信息 */
@@ -84,7 +146,7 @@
         
         .video-title {
             color: #2c3e50;
-            font-size: 1.3em;
+            font-size: 1.2em;
             margin-bottom: 10px;
             font-weight: bold;
         }
@@ -93,7 +155,7 @@
             color: #666;
             line-height: 1.6;
             margin-bottom: 15px;
-            font-size: 0.95em;
+            font-size: 0.9em;
         }
         
         /* 视频属性 */
@@ -101,7 +163,7 @@
             display: flex;
             justify-content: space-between;
             color: #7f8c8d;
-            font-size: 0.85em;
+            font-size: 0.8em;
             border-top: 1px solid #eee;
             padding-top: 10px;
         }
@@ -110,9 +172,10 @@
         .video-controls {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            padding: 10px;
+            gap: 8px;
+            padding: 12px;
             background: #f8f9fa;
+            border-top: 1px solid #eee;
         }
         
         .control-btn {
@@ -122,7 +185,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.9em;
+            font-size: 0.85em;
             transition: background 0.3s;
         }
         
@@ -139,81 +202,181 @@
             font-size: 0.9em;
         }
         
+        /* 分类特定颜色 */
+        .category-1 { border-color: #3498db; } /* 自然风光 - 蓝色 */
+        .category-2 { border-color: #2ecc71; } /* 城市生活 - 绿色 */
+        .category-3 { border-color: #e74c3c; } /* 学习教程 - 红色 */
+        
         /* 响应式设计 */
         @media (max-width: 768px) {
-            .video-card {
-                width: 100%;
-                max-width: 400px;
+            .video-container {
+                grid-template-columns: 1fr;
             }
             
             .header h1 {
                 font-size: 2em;
             }
+            
+            .category-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category-btn {
+                width: 80%;
+            }
+        }
+        
+        /* 隐藏分类的类 */
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
     <!-- 页眉 -->
     <header class="header">
-        <h1>🎬 我的视频收藏馆</h1>
-        <p>点击播放按钮观看视频，每段视频都有对应的文字说明</p>
+        <h1>Visualization</h1>
     </header>
     
-    <!-- 视频容器 -->
-    <div class="video-container" id="videoContainer">
-        <!-- 视频卡片会在这里动态生成 -->
-    </div>
+    <!-- 分类导航 -->
+    <nav class="category-nav">
+        <button class="category-btn active" onclick="showAllCategories()">all</button>
+        <button class="category-btn" onclick="filterByCategory('nature')">🌿 HumanML3D</button>
+        <button class="category-btn" onclick="filterByCategory('city')">🏙️ HumanML3D(failure cases)</button>
+        <button class="category-btn" onclick="filterByCategory('learning')">📚 NTU60</button>
+    </nav>
+    
+    <!-- 分类1：自然风光 -->
+    <section id="nature" class="category-section">
+        <div class="category-header category-1">
+            <span class="category-icon">🌿</span>
+            <h2 class="category-title">自然风光</h2>
+            <span class="category-count" id="nature-count">0 个视频</span>
+        </div>
+        <div class="video-container" id="nature-videos">
+            <!-- 自然风光类视频会动态生成在这里 -->
+        </div>
+    </section>
+    
+    <!-- 分类2：城市生活 -->
+    <section id="city" class="category-section">
+        <div class="category-header category-2">
+            <span class="category-icon">🏙️</span>
+            <h2 class="category-title">城市生活</h2>
+            <span class="category-count" id="city-count">0 个视频</span>
+        </div>
+        <div class="video-container" id="city-videos">
+            <!-- 城市生活类视频会动态生成在这里 -->
+        </div>
+    </section>
+    
+    <!-- 分类3：学习教程 -->
+    <section id="learning" class="category-section">
+        <div class="category-header category-3">
+            <span class="category-icon">📚</span>
+            <h2 class="category-title">学习教程</h2>
+            <span class="category-count" id="learning-count">0 个视频</span>
+        </div>
+        <div class="video-container" id="learning-videos">
+            <!-- 学习教程类视频会动态生成在这里 -->
+        </div>
+    </section>
     
     <!-- 页脚 -->
     <footer class="footer">
-        <p>© 2024 我的视频网站 | 共 <span id="videoCount">0</span> 个视频</p>
+        <p>© 2024 分类视频网站 | 共 <span id="total-count">0</span> 个视频</p>
     </footer>
     
     <script>
-        // 视频数据
-        const videos = [
+        // 视频数据 - 按分类组织
+        const videoData = [
+            // 自然风光类
             {
                 id: 1,
-                title: "示例视频1：美丽的风景",
-                description: "这是一段展示自然风光的视频，包含了山川、河流和森林的美景。视频时长2分钟，适合放松心情。",
-                videoFile: "videos/t2m/mp4/good/G5341_R2_C2_mesh.mp4",  // 视频文件路径
-                duration: "2:15",
-                date: "2024-01-20",
-                size: "15.2 MB"
+                description: "清晨的雪山日出，金色的阳光洒在雪峰上，景色壮观。",
+                videoFile: "videos/t2m/mp4/good/G5341_R2_C2_mesh.mp4",
             },
             {
                 id: 2,
-                title: "示例视频2：城市生活",
-                description: "记录城市日常生活的视频，展示了现代都市的繁华与活力，包含白天和夜晚的不同场景。",
+                description: "茂密森林中的瀑布，水流湍急，绿意盎然。",
                 videoFile: "videos/t2m/mp4/good/G5501_R0_C2_mesh.mp4",
-                duration: "1:45",
-                date: "2024-01-18",
-                size: "12.8 MB"
             },
             {
                 id: 3,
-                title: "示例视频3：学习教程",
-                description: "关于编程学习的教学视频，详细讲解了如何创建一个简单的网页应用。适合初学者观看。",
+                description: "傍晚时分的海边日落，天空呈现出美丽的橙红色。",
                 videoFile: "videos/t2m/mp4/good/G5704_R0_C3_mesh.mp4",
-                duration: "3:30",
-                date: "2024-01-15",
-                size: "25.4 MB"
             },
+            
+            // 城市生活类
             {
                 id: 4,
-                title: "示例视频4：动物世界",
-                description: "可爱动物的日常生活记录，包含了猫咪、狗狗和其他小动物的有趣瞬间。",
-                videoFile: "videos/t2m/mp4/good/G5704_R0_C3_mesh.mp4",
-                duration: "2:00",
-                date: "2024-01-10",
-                size: "18.6 MB"
+                description: "繁华都市的夜晚，灯光璀璨，车水马龙。",
+                videoFile: "videos/t2m/mp4/bad/G5319_R0_C2_mesh.mp4",
+            },
+            {
+                id: 5,
+                description: "城市早高峰时段的交通状况，人们匆匆忙忙开始一天的工作。",
+                videoFile: "videos/t2m/mp4/bad/G5342_R1_C4_mesh.mp4",
+            },
+            {
+                id: 6,
+                description: "清晨公园里的人们在进行各种晨练活动。",
+                videoFile: "videos/t2m/mp4/bad/G5382_R1_C2_mesh.mp4",
+            },
+            {
+                id: 7,
+                description: "清晨公园里的人们在进行各种晨练活动。",
+                videoFile: "videos/t2m/mp4/bad/G5444_R3_C3_mesh.mp4",
+            },
+            {
+                id: 8,
+                description: "清晨公园里的人们在进行各种晨练活动。",
+                videoFile: "videos/t2m/mp4/bad/G5446_R0_C1_mesh.mp4",
+            },
+            {
+                id: 9,
+                description: "清晨公园里的人们在进行各种晨练活动。",
+                videoFile: "videos/t2m/mp4/bad/G5493_R0_C2_mesh.mp4",
+            },
+            
+            // 学习教程类
+            {
+                id: 10,
+                description: "HTML网页开发入门教程，适合初学者学习。",
+                videoFile: "videos/ntu/ntu60Xsub_train_I600_T105_L2_1_stable_brushteeth.mp4",
+            },
+            {
+                id: 11,
+                description: "讲解CSS Flexbox和Grid布局的实际应用技巧。",
+                videoFile: "videos/ntu/ntu60Xsub_train_I714_T64_L0_1_stable_drink.mp4",
+            },
+            {
+                id: 12,
+                description: "JavaScript编程语言基础概念和语法讲解。",
+                videoFile: "videos/ntu/ntu60Xsub_train_I838_T57_L49_1_stable.mp4",
+            },
+            {
+                id: 13,
+                description: "JavaScript编程语言基础概念和语法讲解。",
+                videoFile: "videos/ntu/ntu60Xsub_train_I4188_T47_L34_1_stable.mp4",
+            },
+            {
+                id: 14,
+                description: "JavaScript编程语言基础概念和语法讲解。",
+                videoFile: "videos/ntu/ntu60Xsub_train_I4278_T58_L9_1_stable_clasp.mp4",
+            },
+            {
+                id: 15,
+                description: "JavaScript编程语言基础概念和语法讲解。",
+                videoFile: "videos/ntu/ntu60Xsub_train_I4876_T56_L23_1_stable_kick",
             }
         ];
         
         // 创建视频卡片
         function createVideoCard(video) {
             return `
-                <div class="video-card" id="video-${video.id}">
+                <div class="video-card">
                     <div class="video-player">
                         <video controls>
                             <source src="${video.videoFile}" type="video/mp4">
@@ -228,69 +391,20 @@
                             <span>大小: ${video.size}</span>
                             <span>${video.date}</span>
                         </div>
+                        <div class="video-meta">
+                            <span>标签: ${video.tags.join(', ')}</span>
+                        </div>
                     </div>
                     <div class="video-controls">
                         <button class="control-btn" onclick="playVideo(${video.id})">▶ 播放</button>
                         <button class="control-btn" onclick="pauseVideo(${video.id})">⏸ 暂停</button>
-                        <button class="control-btn" onclick="downloadVideo('${video.videoFile}')">⬇ 下载</button>
+                        <button class="control-btn" onclick="fullscreenVideo(${video.id})">⛶ 全屏</button>
                     </div>
                 </div>
             `;
         }
         
-        // 渲染所有视频
-        function renderVideos() {
-            const container = document.getElementById('videoContainer');
-            const countElement = document.getElementById('videoCount');
-            
-            // 清空容器
-            container.innerHTML = '';
-            
-            // 添加每个视频卡片
-            videos.forEach(video => {
-                container.innerHTML += createVideoCard(video);
-            });
-            
-            // 更新视频数量
-            countElement.textContent = videos.length;
-        }
-        
-        // 播放视频
-        function playVideo(videoId) {
-            const videoElement = document.querySelector(`#video-${videoId} video`);
-            if (videoElement) {
-                videoElement.play();
-            }
-        }
-        
-        // 暂停视频
-        function pauseVideo(videoId) {
-            const videoElement = document.querySelector(`#video-${videoId} video`);
-            if (videoElement) {
-                videoElement.pause();
-            }
-        }
-        
-        // 模拟下载功能
-        function downloadVideo(videoFile) {
-            alert(`开始下载: ${videoFile}\n注意：实际下载功能需要服务器支持。`);
-        }
-        
-        // 页面加载完成后渲染视频
-        document.addEventListener('DOMContentLoaded', function() {
-            renderVideos();
-            
-            // 添加键盘快捷键
-            document.addEventListener('keydown', function(e) {
-                if (e.key === ' ') { // 空格键暂停/播放
-                    const videos = document.querySelectorAll('video');
-                    videos.forEach(video => {
-                        if (video.paused) video.play();
-                        else video.pause();
-                    });
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+        // 按分类渲染视频
+        function renderVideosByCategory() {
+            const categories = ['nature', 'city', 'learning'];
+            let totalCount
