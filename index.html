@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualization</title>
+    <title>Visualization - Motion Generation</title>
     <style>
         /* 基础样式 */
         * {
@@ -13,30 +13,38 @@
         }
         
         body {
-            font-family: 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #ffffff;
             min-height: 100vh;
             padding: 20px;
         }
         
+        /* 页眉样式 */
         .header {
             text-align: center;
             margin-bottom: 40px;
-            padding: 30px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .header h1 {
-            color: #2c3e50;
-            font-size: 2.5em;
+            font-size: 3em;
+            font-weight: 700;
             margin-bottom: 10px;
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 114, 255, 0.3);
         }
         
         .header p {
-            color: #7f8c8d;
-            font-size: 1.1em;
+            color: #a0c8ff;
+            font-size: 1.2em;
+            opacity: 0.9;
         }
         
         /* 分类导航 */
@@ -44,177 +52,231 @@
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             flex-wrap: wrap;
         }
         
         .category-btn {
-            padding: 10px 25px;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
             cursor: pointer;
             font-size: 1em;
+            font-weight: 600;
             transition: all 0.3s ease;
-            color: #555;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .category-btn:hover {
-            background: #f8f9fa;
-            border-color: #3498db;
+            background: rgba(0, 114, 255, 0.3);
+            border-color: #0072ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 114, 255, 0.3);
         }
         
         .category-btn.active {
-            background: #3498db;
-            color: white;
-            border-color: #3498db;
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            border-color: transparent;
+            box-shadow: 0 5px 20px rgba(0, 114, 255, 0.4);
         }
         
         /* 分类容器 */
         .category-section {
             margin-bottom: 50px;
-            display: block; /* 默认显示所有分类 */
+            display: block;
         }
         
         /* 分类标题 */
         .category-header {
             display: flex;
             align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 20px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border-left: 5px solid;
+        }
+        
+        .category-title-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .category-icon {
+            font-size: 2em;
         }
         
         .category-title {
             font-size: 1.8em;
-            font-weight: bold;
-            margin-right: 15px;
+            font-weight: 700;
         }
         
-        .category-icon {
-            font-size: 1.5em;
-            margin-right: 10px;
+        .category-subtitle {
+            color: #a0c8ff;
+            font-size: 1em;
+            opacity: 0.8;
         }
         
         .category-count {
-            background: #e74c3c;
-            color: white;
-            padding: 3px 10px;
-            border-radius: 15px;
-            font-size: 0.9em;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: 600;
         }
         
-        /* 视频容器 */
-        .video-container {
+        /* 视频网格 */
+        .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+            gap: 30px;
         }
         
         /* 视频卡片 */
         .video-card {
-            background: white;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .video-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 114, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 114, 255, 0.2);
         }
         
-        /* 视频播放器 */
-        .video-player {
+        /* 视频容器 */
+        .video-container {
+            position: relative;
             width: 100%;
-            height: 180px;
+            height: 280px;
             background: #000;
+            overflow: hidden;
         }
         
-        .video-player video {
+        .video-container video {
             width: 100%;
             height: 100%;
-            display: block;
             object-fit: cover;
+            display: block;
+        }
+        
+        .video-number {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 114, 255, 0.9);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            z-index: 2;
         }
         
         /* 视频信息 */
         .video-info {
-            padding: 20px;
-        }
-        
-        .video-title {
-            color: #2c3e50;
-            font-size: 1.2em;
-            margin-bottom: 10px;
-            font-weight: bold;
+            padding: 25px;
         }
         
         .video-description {
-            color: #666;
+            color: #e0e0e0;
             line-height: 1.6;
-            margin-bottom: 15px;
-            font-size: 0.9em;
+            font-size: 1.1em;
+            margin-bottom: 20px;
         }
         
-        /* 视频属性 */
-        .video-meta {
+        .video-path {
             display: flex;
-            justify-content: space-between;
-            color: #7f8c8d;
-            font-size: 0.8em;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
+            align-items: center;
+            gap: 8px;
+            color: #7fa8ff;
+            font-size: 0.9em;
+            font-family: 'Consolas', 'Monaco', monospace;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .path-icon {
+            font-size: 1.2em;
         }
         
         /* 控制按钮 */
         .video-controls {
             display: flex;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px;
-            background: #f8f9fa;
-            border-top: 1px solid #eee;
+            gap: 10px;
+            padding: 0 25px 25px 25px;
         }
         
         .control-btn {
-            padding: 8px 15px;
-            background: #3498db;
-            color: white;
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.85em;
-            transition: background 0.3s;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .control-btn:hover {
-            background: #2980b9;
+            background: rgba(0, 114, 255, 0.3);
+            transform: translateY(-2px);
         }
         
-        /* 页脚 */
-        .footer {
-            text-align: center;
-            margin-top: 50px;
-            padding: 20px;
-            color: #7f8c8d;
-            font-size: 0.9em;
+        .control-btn.play {
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
         }
         
-        /* 分类特定颜色 */
-        .category-1 { border-color: #3498db; } /* 自然风光 - 蓝色 */
-        .category-2 { border-color: #2ecc71; } /* 城市生活 - 绿色 */
-        .category-3 { border-color: #e74c3c; } /* 学习教程 - 红色 */
+        .control-btn.play:hover {
+            box-shadow: 0 5px 20px rgba(0, 114, 255, 0.4);
+        }
+        
+        /* 分类特定样式 */
+        .category-humansuccess { 
+            border-left-color: #00d2ff;
+        }
+        
+        .category-humanfailure { 
+            border-left-color: #ff416c;
+        }
+        
+        .category-ntu { 
+            border-left-color: #7bff8f;
+        }
+        
+        /* 隐藏分类 */
+        .hidden {
+            display: none;
+        }
         
         /* 响应式设计 */
-        @media (max-width: 768px) {
-            .video-container {
+        @media (max-width: 1100px) {
+            .video-grid {
                 grid-template-columns: 1fr;
             }
-            
+        }
+        
+        @media (max-width: 768px) {
             .header h1 {
-                font-size: 2em;
+                font-size: 2.2em;
             }
             
             .category-nav {
@@ -223,13 +285,33 @@
             }
             
             .category-btn {
-                width: 80%;
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .category-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .video-container {
+                height: 240px;
+            }
+            
+            .control-btn span {
+                display: none;
             }
         }
         
-        /* 隐藏分类的类 */
-        .hidden {
-            display: none;
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .video-card {
+            animation: fadeIn 0.5s ease-out;
         }
     </style>
 </head>
@@ -237,189 +319,378 @@
     <!-- 页眉 -->
     <header class="header">
         <h1>Visualization</h1>
+        <p>Motion Generation Results - HumanML3D & NTU Datasets</p>
     </header>
     
     <!-- 分类导航 -->
     <nav class="category-nav">
-        <button class="category-btn active" onclick="showAllCategories()">all</button>
-        <button class="category-btn" onclick="filterByCategory('nature')">🌿 HumanML3D</button>
-        <button class="category-btn" onclick="filterByCategory('city')">🏙️ HumanML3D(failure cases)</button>
-        <button class="category-btn" onclick="filterByCategory('learning')">📚 NTU60</button>
+        <button class="category-btn active" onclick="showAllCategories()">📁 All Videos</button>
+        <button class="category-btn" onclick="filterByCategory('HumanML3D')">✅ HumanML3D (Success)</button>
+        <button class="category-btn" onclick="filterByCategory('HumanML3D(failure cases)')">❌ HumanML3D (Failure)</button>
+        <button class="category-btn" onclick="filterByCategory('ntu')">👥 NTU Dataset</button>
     </nav>
     
-    <!-- 分类1：自然风光 -->
-    <section id="nature" class="category-section">
-        <div class="category-header category-1">
-            <span class="category-icon">🌿</span>
-            <h2 class="category-title">HumanML3D</h2>
-            <span class="category-count" id="nature-count">0 个视频</span>
+    <!-- HumanML3D Success Cases -->
+    <section id="HumanML3D" class="category-section">
+        <div class="category-header category-humansuccess">
+            <div class="category-title-group">
+                <span class="category-icon">✅</span>
+                <div>
+                    <h2 class="category-title">HumanML3D</h2>
+                    <div class="category-subtitle">Successful Text-to-Motion Generation</div>
+                </div>
+            </div>
+            <span class="category-count" id="HumanML3D-count">0 videos</span>
         </div>
-        <div class="video-container" id="nature-videos">
-            <!-- 自然风光类视频会动态生成在这里 -->
-        </div>
-    </section>
-    
-    <!-- 分类2：城市生活 -->
-    <section id="city" class="category-section">
-        <div class="category-header category-2">
-            <span class="category-icon">🏙️</span>
-            <h2 class="category-title">HumanML3D(failure cases)</h2>
-            <span class="category-count" id="city-count">0 个视频</span>
-        </div>
-        <div class="video-container" id="city-videos">
-            <!-- 城市生活类视频会动态生成在这里 -->
+        <div class="video-grid" id="HumanML3D-videos">
+            <!-- HumanML3D 成功案例视频 -->
         </div>
     </section>
     
-    <!-- 分类3：学习教程 -->
-    <section id="learning" class="category-section">
-        <div class="category-header category-3">
-            <span class="category-icon">📚</span>
-            <h2 class="category-title">NTU60</h2>
-            <span class="category-count" id="learning-count">0 个视频</span>
+    <!-- HumanML3D Failure Cases -->
+    <section id="HumanMLD-failure" class="category-section">
+        <div class="category-header category-humanfailure">
+            <div class="category-title-group">
+                <span class="category-icon">❌</span>
+                <div>
+                    <h2 class="category-title">HumanML3D Failure Cases</h2>
+                    <div class="category-subtitle">Text-to-Motion Generation Challenges</div>
+                </div>
+            </div>
+            <span class="category-count" id="HumanMLD-failure-count">0 videos</span>
         </div>
-        <div class="video-container" id="learning-videos">
-            <!-- 学习教程类视频会动态生成在这里 -->
+        <div class="video-grid" id="HumanMLD-failure-videos">
+            <!-- HumanML3D 失败案例视频 -->
         </div>
     </section>
     
-    <!-- 页脚 -->
-    <footer class="footer">
-        <p>© 2024 分类视频网站 | 共 <span id="total-count">0</span> 个视频</p>
-    </footer>
-    
+    <!-- NTU Dataset -->
+    <section id="ntu" class="category-section">
+        <div class="category-header category-ntu">
+            <div class="category-title-group">
+                <span class="category-icon">👥</span>
+                <div>
+                    <h2 class="category-title">NTU Dataset</h2>
+                    <div class="category-subtitle">Human Action Recognition</div>
+                </div>
+            </div>
+            <span class="category-count" id="ntu-count">0 videos</span>
+        </div>
+        <div class="video-grid" id="ntu-videos">
+            <!-- NTU 数据集视频 -->
+        </div>
+    </section>
+
     <script>
-        // 视频数据 - 按分类组织
+        // 视频数据
         const videoData = [
-            // 自然风光类
+            // HumanML3D Success Cases
             {
                 id: 1,
-                description: "清晨的雪山日出，金色的阳光洒在雪峰上，景色壮观。",
+                description: "A person who is standing with his arms by his sides raises his left arm and waves five times before returning his arm to his side.",
                 videoFile: "videos/t2m/mp4/good/G5341_R2_C2_mesh.mp4",
-                category: "nature"
+                category: "HumanML3D"
             },
             {
                 id: 2,
-                description: "茂密森林中的瀑布，水流湍急，绿意盎然。",
+                description: "Sit on bottom, get up normally, walk in a nearly whole circle starting left and circling back to the starting point.",
                 videoFile: "videos/t2m/mp4/good/G5501_R0_C2_mesh.mp4",
-                category: "nature"
+                category: "HumanML3D"
             },
             {
                 id: 3,
-                description: "傍晚时分的海边日落，天空呈现出美丽的橙红色。",
+                description: "A person stands with their arms out at the sides, jumps up one time, then walks forward.",
                 videoFile: "videos/t2m/mp4/good/G5704_R0_C3_mesh.mp4",
-                category: "nature"
+                category: "HumanML3D"
             },
             
-            // 城市生活类
+            // HumanML3D Failure Cases
             {
                 id: 4,
-                description: "繁华都市的夜晚，灯光璀璨，车水马龙。",
+                description: "The man puts something down and walks.",
                 videoFile: "videos/t2m/mp4/bad/G5319_R0_C2_mesh.mp4",
-                category: "city"
+                category: "HumanML3D(failure cases)"
             },
             {
                 id: 5,
-                description: "城市早高峰时段的交通状况，人们匆匆忙忙开始一天的工作。",
+                description: "A person walks straight, takes a half turn to the right, walks and then stops.",
                 videoFile: "videos/t2m/mp4/bad/G5342_R1_C4_mesh.mp4",
-                category: "city"
+                category: "HumanML3D(failure cases)"
             },
             {
                 id: 6,
-                description: "清晨公园里的人们在进行各种晨练活动。",
+                description: "A person walks up stairs turns right and walks back down stairs.",
                 videoFile: "videos/t2m/mp4/bad/G5382_R1_C2_mesh.mp4",
-                category: "city"
+                category: "HumanML3D(failure cases)"
             },
             {
                 id: 7,
-                description: "清晨公园里的人们在进行各种晨练活动。",
+                description: "A man walks backwards then punches and then kicks.",
                 videoFile: "videos/t2m/mp4/bad/G5444_R3_C3_mesh.mp4",
-                category: "city"
+                category: "HumanML3D(failure cases)"
             },
             {
                 id: 8,
-                description: "清晨公园里的人们在进行各种晨练活动。",
+                description: "The man is laying down and get up",
                 videoFile: "videos/t2m/mp4/bad/G5446_R0_C1_mesh.mp4",
-                category: "city"
+                category: "HumanML3D(failure cases)"
             },
             {
                 id: 9,
-                description: "清晨公园里的人们在进行各种晨练活动。",
+                description: "A person gets down and crawls forward on their hands and feet, then turns around and crawls back before standing back up.",
                 videoFile: "videos/t2m/mp4/bad/G5493_R0_C2_mesh.mp4",
-                category: "city"
+                category: "HumanML3D(failure cases)"
             },
             
-            // 学习教程类
+            // NTU Dataset
             {
                 id: 10,
-                description: "HTML网页开发入门教程，适合初学者学习。",
-                videoFile: "videos/ntu/ntu60Xsub_train_I600_T105_L2_1_stable_brushteeth.mp4",
-                category: "learning"
+                description: "brush teeth",
+                videoFile: "videos/ntu/ntu60Xsub_train_I600_T105_L2_1_stable_brushteath.mp4",
+                category: "ntu"
             },
             {
                 id: 11,
-                description: "讲解CSS Flexbox和Grid布局的实际应用技巧。",
+                description: "drink water",
                 videoFile: "videos/ntu/ntu60Xsub_train_I714_T64_L0_1_stable_drink.mp4",
-                category: "learning"
+                category: "ntu"
             },
             {
                 id: 12,
-                description: "JavaScript编程语言基础概念和语法讲解。",
+                description: "punch/slap other person",
                 videoFile: "videos/ntu/ntu60Xsub_train_I838_T57_L49_1_stable.mp4",
-                category: "learning"
+                category: "ntu"
             },
             {
                 id: 13,
-                description: "JavaScript编程语言基础概念和语法讲解。",
+                description: "nod head/bow",
                 videoFile: "videos/ntu/ntu60Xsub_train_I4188_T47_L34_1_stable.mp4",
-                category: "learning"
+                category: "ntu"
             },
             {
                 id: 14,
-                description: "JavaScript编程语言基础概念和语法讲解。",
+                description: "clap",
                 videoFile: "videos/ntu/ntu60Xsub_train_I4278_T58_L9_1_stable_clasp.mp4",
-                category: "learning"
+                category: "ntu"
             },
             {
                 id: 15,
-                description: "JavaScript编程语言基础概念和语法讲解。",
-                videoFile: "videos/ntu/ntu60Xsub_train_I4876_T56_L23_1_stable_kick",
-                category: "learning"
+                description: "kick something",
+                videoFile: "videos/ntu/ntu60Xsub_train_I4876_T56_L23_1_stable_kick.mp4",
+                category: "ntu"
             }
         ];
-        
+
         // 创建视频卡片
         function createVideoCard(video) {
+            // 获取分类标签
+            let categoryBadge = '';
+            if (video.category === 'HumanML3D') {
+                categoryBadge = '✅';
+            } else if (video.category === 'HumanML3D(failure cases)') {
+                categoryBadge = '❌';
+            } else if (video.category === 'ntu') {
+                categoryBadge = '👥';
+            }
+            
             return `
                 <div class="video-card">
-                    <div class="video-player">
-                        <video controls>
+                    <div class="video-container">
+                        <span class="video-number">${categoryBadge} ${video.id}</span>
+                        <video playsinline>
                             <source src="${video.videoFile}" type="video/mp4">
-                            您的浏览器不支持视频播放，请使用现代浏览器。
+                            Your browser does not support the video tag.
                         </video>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">${video.title}</h3>
                         <p class="video-description">${video.description}</p>
-                        <div class="video-meta">
-                            <span>时长: ${video.duration}</span>
-                            <span>大小: ${video.size}</span>
-                            <span>${video.date}</span>
-                        </div>
-                        <div class="video-meta">
-                            <span>标签: ${video.tags.join(', ')}</span>
+                        <div class="video-path">
+                            <span class="path-icon">📁</span>
+                            <span>${video.videoFile}</span>
                         </div>
                     </div>
                     <div class="video-controls">
-                        <button class="control-btn" onclick="playVideo(${video.id})">▶ 播放</button>
-                        <button class="control-btn" onclick="pauseVideo(${video.id})">⏸ 暂停</button>
-                        <button class="control-btn" onclick="fullscreenVideo(${video.id})">⛶ 全屏</button>
+                        <button class="control-btn play" onclick="togglePlay(this, ${video.id})">
+                            <span>▶</span><span>Play/Pause</span>
+                        </button>
+                        <button class="control-btn" onclick="toggleFullscreen(${video.id})">
+                            <span>⛶</span><span>Fullscreen</span>
+                        </button>
+                        <button class="control-btn" onclick="downloadVideo('${video.videoFile}')">
+                            <span>⬇</span><span>Download</span>
+                        </button>
                     </div>
                 </div>
             `;
         }
-        
+
         // 按分类渲染视频
         function renderVideosByCategory() {
-            const categories = ['nature', 'city', 'learning'];
-            let totalCount
+            const categories = [
+                { id: 'HumanML3D', name: 'HumanML3D' },
+                { id: 'HumanMLD-failure', name: 'HumanML3D(failure cases)' },
+                { id: 'ntu', name: 'ntu' }
+            ];
+            
+            categories.forEach(cat => {
+                const container = document.getElementById(`${cat.id}-videos`);
+                const countElement = document.getElementById(`${cat.id}-count`);
+                
+                // 清空容器
+                container.innerHTML = '';
+                
+                // 筛选该分类的视频
+                const categoryVideos = videoData.filter(video => video.category === cat.name);
+                
+                // 按ID排序
+                categoryVideos.sort((a, b) => a.id - b.id);
+                
+                // 渲染视频卡片
+                categoryVideos.forEach(video => {
+                    container.innerHTML += createVideoCard(video);
+                });
+                
+                // 更新分类计数
+                countElement.textContent = `${categoryVideos.length} videos`;
+            });
+        }
+
+        // 显示所有分类
+        function showAllCategories() {
+            // 显示所有分类区域
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.remove('hidden');
+            });
+            
+            // 更新导航按钮状态
+            updateNavButtons('all');
+        }
+
+        // 按分类筛选
+        function filterByCategory(category) {
+            const categoryMap = {
+                'HumanML3D': 'HumanML3D',
+                'HumanML3D(failure cases)': 'HumanMLD-failure',
+                'ntu': 'ntu'
+            };
+            
+            const categoryId = categoryMap[category];
+            
+            if (!categoryId) {
+                showAllCategories();
+                return;
+            }
+            
+            // 隐藏所有分类
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // 显示选中的分类
+            const targetSection = document.getElementById(categoryId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+            
+            // 更新导航按钮状态
+            updateNavButtons(category);
+        }
+
+        // 更新导航按钮状态
+        function updateNavButtons(activeCategory) {
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (activeCategory === 'all') {
+                buttons[0].classList.add('active');
+            } else {
+                const activeBtn = Array.from(buttons).find(btn => 
+                    btn.onclick.toString().includes(`'${activeCategory}'`)
+                );
+                if (activeBtn) activeBtn.classList.add('active');
+            }
+        }
+
+        // 播放/暂停视频
+        function togglePlay(button, videoId) {
+            const videoCard = button.closest('.video-card');
+            const video = videoCard.querySelector('video');
+            const playIcon = button.querySelector('span:first-child');
+            
+            if (video.paused) {
+                video.play();
+                playIcon.textContent = '⏸';
+            } else {
+                video.pause();
+                playIcon.textContent = '▶';
+            }
+        }
+
+        // 全屏播放
+        function toggleFullscreen(videoId) {
+            const video = videoData.find(v => v.id === videoId);
+            if (video) {
+                const videoElements = document.querySelectorAll('video');
+                videoElements.forEach(vidElement => {
+                    if (vidElement.querySelector(`source[src="${video.videoFile}"]`)) {
+                        if (vidElement.requestFullscreen) {
+                            vidElement.requestFullscreen();
+                        } else if (vidElement.mozRequestFullScreen) { // Firefox
+                            vidElement.mozRequestFullScreen();
+                        } else if (vidElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                            vidElement.webkitRequestFullscreen();
+                        } else if (vidElement.msRequestFullscreen) { // IE/Edge
+                            vidElement.msRequestFullscreen();
+                        }
+                    }
+                });
+            }
+        }
+
+        // 模拟下载功能
+        function downloadVideo(videoFile) {
+            const filename = videoFile.split('/').pop();
+            const link = document.createElement('a');
+            link.href = videoFile;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 渲染视频
+            renderVideosByCategory();
+            
+            // 默认显示所有分类
+            showAllCategories();
+            
+            // 监听全屏变化
+            document.addEventListener('fullscreenchange', function() {
+                if (!document.fullscreenElement) {
+                    // 退出全屏时重置所有播放按钮
+                    document.querySelectorAll('.control-btn.play span:first-child').forEach(span => {
+                        span.textContent = '▶';
+                    });
+                }
+            });
+            
+            // 自动播放当前视频时暂停其他视频
+            document.querySelectorAll('video').forEach(video => {
+                video.addEventListener('play', function() {
+                    document.querySelectorAll('video').forEach(otherVideo => {
+                        if (otherVideo !== video && !otherVideo.paused) {
+                            otherVideo.pause();
+                            const otherButton = otherVideo.closest('.video-card').querySelector('.control-btn.play span:first-child');
+                            if (otherButton) otherButton.textContent = '▶';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
